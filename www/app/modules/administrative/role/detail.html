@@ -1,0 +1,28 @@
+<div>
+  <div os-page-header>
+    <ul os-breadcrumbs>
+      <li><a ui-sref="role-list" translate="role.list">Roles</a></li>
+    </ul>
+    <h3>{{role.name}}</h3>
+
+    <div class="os-btns right">
+      <button show-if-admin class="primary" ui-sref="role-addedit({roleId: role.id})">
+        <span class="fa fa-pencil"></span>
+        <span translate="common.buttons.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+
+  <div os-side-menu>
+    <ul>
+      <li ui-sref-active="active">
+        <a ui-sref=".overview">
+          <i class="fa fa-eye"></i>
+          <span class="os-title" translate="role.menu.overview">Overview</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="os-side-menu-page-content" ui-view></div>
+</div>

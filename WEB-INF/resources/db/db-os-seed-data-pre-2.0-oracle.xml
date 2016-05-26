@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+	<changeSet id="procedure to enable/disable foreign key constraints" author="nitesh" dbms="oracle">
+      <sql splitStatements="false" endDelimiter="$">
+       CREATE OR REPLACE
+        PROCEDURE DISABLECONSTRAINT AS
+        cnt number:=0;
+        BEGIN
+          
+          FOR c IN
+          (SELECT c.owner, c.table_name, c.constraint_name, c.CONSTRAINT_TYPE
+           FROM user_constraints c, user_tables t
+           WHERE c.table_name = t.table_name
+           AND c.status = 'ENABLED' and c.constraint_type='R')
+          LOOP
+          cnt:=cnt+1;
+            dbms_output.put_line(cnt||' Constraint:   '||c.constraint_name ||' Table'|| c.table_name);
+            execute immediate 'alter table '||c.table_name||' disable constraint '||c.constraint_name||'';
+          END LOOP;
+          commit;
+        END DISABLECONSTRAINT;
+    </sql>
+    <sql splitStatements="false" endDelimiter="$">
+       CREATE OR REPLACE
+        PROCEDURE ENABLECONSTRAINT AS
+        cnt number:=0;
+        BEGIN
+          
+          FOR c IN
+          (SELECT c.owner, c.table_name, c.constraint_name, c.CONSTRAINT_TYPE
+           FROM user_constraints c, user_tables t
+           WHERE c.table_name = t.table_name
+           AND c.status = 'DISABLED' and c.constraint_type='R')
+          LOOP
+          cnt:=cnt+1;
+            dbms_output.put_line(cnt||' Constraint:   '||c.constraint_name ||' Table'|| c.table_name);
+            execute immediate 'alter table '||c.table_name||' enable constraint '||c.constraint_name||'';
+          END LOOP;
+          commit;
+        END ENABLECONSTRAINT;
+    </sql>
+    </changeSet>
+	<changeSet id="disable constraints" author="nitesh" dbms="oracle">   
+        <sql>call DISABLECONSTRAINT()</sql>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-4">
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003991"/>
+            <column name="LONG_NAME" value="Specimen"/>
+            <column name="DEFINITION" value="Specimen Class"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Specimen_Type_PID"/>
+            <column name="LONG_NAME" value="Specimen Type"/>
+            <column name="DEFINITION" value="Specimen Type"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003988"/>
+            <column name="LONG_NAME" value="Clinical Status"/>
+            <column name="DEFINITION" value="Clinical status of the participant."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003989"/>
+            <column name="LONG_NAME" value="Gender"/>
+            <column name="DEFINITION" value="Gender of the participant."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003990"/>
+            <column name="LONG_NAME" value="Genotype"/>
+            <column name="DEFINITION" value="Genotype of the participant."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2004001"/>
+            <column name="LONG_NAME" value="VitalStatus"/>
+            <column name="DEFINITION" value="Vital status of the participant."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003992"/>
+            <column name="LONG_NAME" value="Tissue Side"/>
+            <column name="DEFINITION" value="Tissue Side"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003993"/>
+            <column name="LONG_NAME" value="Pathological Status"/>
+            <column name="DEFINITION" value="Pathological Status"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003994"/>
+            <column name="LONG_NAME" value="Received Quality"/>
+            <column name="DEFINITION" value="Received Quality"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003995"/>
+            <column name="LONG_NAME" value="Fixation Type"/>
+            <column name="DEFINITION" value="Fixation Type"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003996"/>
+            <column name="LONG_NAME" value="Collection Procedure"/>
+            <column name="DEFINITION" value="Collection Procedure"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003997"/>
+            <column name="LONG_NAME" value="Container"/>
+            <column name="DEFINITION" value="Container"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003998"/>
+            <column name="LONG_NAME" value="Method"/>
+            <column name="DEFINITION" value="Method"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2003999"/>
+            <column name="LONG_NAME" value="Embedding Medium"/>
+            <column name="DEFINITION" value="Embedding Medium"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2004000"/>
+            <column name="LONG_NAME" value="Biohazard"/>
+            <column name="DEFINITION" value="Biohazard"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Hist_Quality"/>
+            <column name="LONG_NAME" value="Histological Quality"/>
+            <column name="DEFINITION" value="Histological Quality"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Site_Type_PID"/>
+            <column name="LONG_NAME" value="Site Type"/>
+            <column name="DEFINITION" value="Site Type"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Tissue_Site_PID"/>
+            <column name="LONG_NAME" value="Tissue Site"/>
+            <column name="DEFINITION" value="Tissue Site"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Ethnicity_PID"/>
+            <column name="LONG_NAME" value="Ethnicity"/>
+            <column name="DEFINITION" value="Ethnicity"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Race_PID"/>
+            <column name="LONG_NAME" value="Race"/>
+            <column name="DEFINITION" value="Race"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2004100"/>
+            <column name="LONG_NAME" value="Countries"/>
+            <column name="DEFINITION" value="List of Countries."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2004200"/>
+            <column name="LONG_NAME" value="States"/>
+            <column name="DEFINITION" value="List of States."/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Clinical_Diagnosis_PID"/>
+            <column name="LONG_NAME" value="Clinical Diagnosis"/>
+            <column name="DEFINITION" value="Clinical Diagnosis"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="4284"/>
+            <column name="LONG_NAME" value="Request Status"/>
+            <column name="DEFINITION" value="Statuses for the ordered requests"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="4285"/>
+            <column name="LONG_NAME" value="Requested Items Status"/>
+            <column name="DEFINITION" value="Statuses for the individual elements in the ordered request"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="2004300"/>
+            <column name="LONG_NAME" value="Collection Status"/>
+            <column name="DEFINITION" value="Collection Status"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="scg_collection_status"/>
+            <column name="LONG_NAME" value="Collection Status"/>
+            <column name="DEFINITION" value="Collection Status"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="order_status"/>
+            <column name="LONG_NAME" value="Order Status"/>
+            <column name="DEFINITION" value="Order Status"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="shipping_activity_status"/>
+            <column name="LONG_NAME" value="Shipping Activity Status"/>
+            <column name="DEFINITION" value="Shipping Activity Status"/>
+            <column name="VERSION" value="1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+        <insert tableName="CATISSUE_CDE">
+            <column name="PUBLIC_ID" value="Morphological_Abnormalitiy_PID"/>
+            <column name="LONG_NAME" value="Morphological Abnormalitiy PID"/>
+            <column name="DEFINITION" value="Morphological Abnormalitiy PID"/>
+            <column name="VERSION" value="1.1"/>
+            <column name="LAST_UPDATED"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-7">
+        <insert tableName="CATISSUE_STOR_TYPE_SPEC_CLASS">
+            <column name="STORAGE_TYPE_ID" valueNumeric="3"/>
+            <column name="SPECIMEN_CLASS" value="Fluid"/>
+        </insert>
+        <insert tableName="CATISSUE_STOR_TYPE_SPEC_CLASS">
+            <column name="STORAGE_TYPE_ID" valueNumeric="3"/>
+            <column name="SPECIMEN_CLASS" value="Tissue"/>
+        </insert>
+        <insert tableName="CATISSUE_STOR_TYPE_SPEC_CLASS">
+            <column name="STORAGE_TYPE_ID" valueNumeric="3"/>
+            <column name="SPECIMEN_CLASS" value="Molecular"/>
+        </insert>
+        <insert tableName="CATISSUE_STOR_TYPE_SPEC_CLASS">
+            <column name="STORAGE_TYPE_ID" valueNumeric="3"/>
+            <column name="SPECIMEN_CLASS" value="Cell"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-11">
+        <insert tableName="CATISSUE_STOR_TYPE_HOLDS_TYPE">
+            <column name="STORAGE_TYPE_ID" valueNumeric="1"/>
+            <column name="HOLDS_STORAGE_TYPE_ID" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-13">
+        <insert tableName="CATISSUE_AUTH_PROVIDERS">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="AUTH_TYPE" value="catissue"/>
+            <column name="IMPL_CLASS" value="com.krishagni.catissueplus.core.auth.services.impl.CatissueAuthServiceImpl"/>
+        </insert>
+        <insert tableName="CATISSUE_AUTH_PROVIDERS">
+            <column name="IDENTIFIER" valueNumeric="2"/>
+            <column name="AUTH_TYPE" value="ldap"/>
+            <column name="IMPL_CLASS" value="com.krishagni.catissueplus.core.auth.services.impl.LdapAuthServiceImpl"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-17">
+        <insert tableName="CATISSUE_ADDRESS">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="STREET"/>
+            <column name="CITY" value="Not Specified"/>
+            <column name="STATE"/>
+            <column name="COUNTRY" value="United States"/>
+            <column name="ZIPCODE"/>
+            <column name="PHONE_NUMBER"/>
+            <column name="FAX_NUMBER"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-18">
+        <insert tableName="CATISSUE_SPECIMEN_LABEL_COUNT">
+            <column name="LABEL_COUNT" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-20">
+        <insert tableName="CATISSUE_CONTAINER_TYPE">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="CAPACITY_ID"/>
+            <column name="NAME" value="All"/>
+            <column name="ONE_DIMENSION_LABEL"/>
+            <column name="TWO_DIMENSION_LABEL"/>
+            <column name="COMMENTS"/>
+            <column name="ACTIVITY_STATUS" value="Disabled"/>
+            <column name="ONE_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+            <column name="TWO_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+        </insert>
+        <insert tableName="CATISSUE_CONTAINER_TYPE">
+            <column name="IDENTIFIER" valueNumeric="2"/>
+            <column name="CAPACITY_ID"/>
+            <column name="NAME" value="Any"/>
+            <column name="ONE_DIMENSION_LABEL"/>
+            <column name="TWO_DIMENSION_LABEL"/>
+            <column name="COMMENTS"/>
+            <column name="ACTIVITY_STATUS" value="Disabled"/>
+            <column name="ONE_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+            <column name="TWO_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+        </insert>
+        <insert tableName="CATISSUE_CONTAINER_TYPE">
+            <column name="IDENTIFIER" valueNumeric="3"/>
+            <column name="CAPACITY_ID" valueNumeric="1"/>
+            <column name="NAME" value="Shipment Container"/>
+            <column name="ONE_DIMENSION_LABEL" value="X"/>
+            <column name="TWO_DIMENSION_LABEL" value="Y"/>
+            <column name="COMMENTS"/>
+            <column name="ACTIVITY_STATUS" value="Active"/>
+            <column name="ONE_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+            <column name="TWO_DIMENSION_LABELLING_SCHEME" value="Numbers"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-21">
+        <insert tableName="CATISSUE_AUTH_DOMAINS">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="DOMAIN_NAME" value="catissue"/>
+            <column name="AUTH_TYPE" value="catissue"/>
+        </insert>
+        <insert tableName="CATISSUE_AUTH_DOMAINS">
+            <column name="IDENTIFIER" valueNumeric="2"/>
+            <column name="DOMAIN_NAME" value="ldap"/>
+            <column name="AUTH_TYPE" value="ldap"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-22">
+        <insert tableName="CATISSUE_DEPARTMENT">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="NAME" value="d"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-23">
+        <insert tableName="CATISSUE_SPECIMEN_ARRAY_TYPE">
+            <column name="IDENTIFIER" valueNumeric="2"/>
+            <column name="SPECIMEN_CLASS"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-30">
+        <insert tableName="CATISSUE_STORAGE_TYPE">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="DEFAULT_TEMPERATURE"/>
+        </insert>
+        <insert tableName="CATISSUE_STORAGE_TYPE">
+            <column name="IDENTIFIER" valueNumeric="3"/>
+            <column name="DEFAULT_TEMPERATURE" valueNumeric="-80"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-31">
+        <insert tableName="CATISSUE_CAPACITY">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="ONE_DIMENSION_CAPACITY" valueNumeric="100"/>
+            <column name="TWO_DIMENSION_CAPACITY" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+    <changeSet dbms="oracle" author="OpenSpecimen" id="1427203096379-33">
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="1"/>
+            <column name="PRIVILEGE" value="ACCESS"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="2"/>
+            <column name="PRIVILEGE" value="ASSIGN_READ"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="3"/>
+            <column name="PRIVILEGE" value="ASSIGN_USE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="4"/>
+            <column name="PRIVILEGE" value="CREATE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="5"/>
+            <column name="PRIVILEGE" value="DEFINE_ANNOTATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="6"/>
+            <column name="PRIVILEGE" value="DELETE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="7"/>
+            <column name="PRIVILEGE" value="EXECUTE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="8"/>
+            <column name="PRIVILEGE" value="GENERAL_ADMINISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="9"/>
+            <column name="PRIVILEGE" value="DISTRIBUTION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="10"/>
+            <column name="PRIVILEGE" value="GENERAL_SITE_ADMINISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="11"/>
+            <column name="PRIVILEGE" value="IDENTIFIED_DATA_ACCESS"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="12"/>
+            <column name="PRIVILEGE" value="PARTICIPANT_SCG_ANNOTATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="13"/>
+            <column name="PRIVILEGE" value="PHI_ACCESS"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="14"/>
+            <column name="PRIVILEGE" value="PROTOCOL_ADMINISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="15"/>
+            <column name="PRIVILEGE" value="QUERY"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="16"/>
+            <column name="PRIVILEGE" value="READ"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="17"/>
+            <column name="PRIVILEGE" value="READ_DENIED"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="18"/>
+            <column name="PRIVILEGE" value="REGISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="19"/>
+            <column name="PRIVILEGE" value="REPOSITORY_ADMINISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="20"/>
+            <column name="PRIVILEGE" value="SHIPMENT_PROCESSING"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="21"/>
+            <column name="PRIVILEGE" value="SPECIMEN_ACCESSION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="22"/>
+            <column name="PRIVILEGE" value="SPECIMEN_ANNOTATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="23"/>
+            <column name="PRIVILEGE" value="SPECIMEN_PROCESSING"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="24"/>
+            <column name="PRIVILEGE" value="SPECIMEN_STORAGE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="25"/>
+            <column name="PRIVILEGE" value="STORAGE_ADMINISTRATION"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="26"/>
+            <column name="PRIVILEGE" value="UPDATE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="27"/>
+            <column name="PRIVILEGE" value="USE"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="28"/>
+            <column name="PRIVILEGE" value="USER_PROVISIONING"/>
+        </insert>
+        <insert tableName="CATISSUE_PRIVILEGES">
+            <column name="IDENTIFIER" valueNumeric="29"/>
+            <column name="PRIVILEGE" value="WRITE"/>
+        </insert>
+    </changeSet>
+	<changeSet id="enable constraints" author="nitesh" dbms="oracle">
+        <sql>call ENABLECONSTRAINT()</sql>
+    </changeSet>
+</databaseChangeLog>

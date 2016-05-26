@@ -1,0 +1,176 @@
+<div class="clearfix">
+  <div class="col-xs-8">
+    <ul class="os-key-values os-two-cols" os-inline-editors on-save="editCp">
+      <li class="item">
+        <strong class="key key-sm" translate="cp.short_title">Short Title:</strong>
+        <os-inline-edit editor="stEditor" name="shortTitle" class="value value-md" value="cp.shortTitle">
+          <span ng-if="stEditor.isDisplayMode()">{{stEditor.viewValue}}</span>
+          <input ng-if="stEditor.isEditMode()" class="form-control" type="text" ng-model="stEditor.editValue">
+        </os-inline-edit>
+      </li>
+
+      <li class="item" ng-if="codingEnabled">
+        <strong class="key key-sm" translate="cp.code">Short Code</strong>
+        <os-inline-edit editor="codeEditor" name="code" class="value value-md" value="cp.code">
+          <span ng-if="codeEditor.isDisplayMode()">{{codeEditor.viewValue}}</span>
+          <input ng-if="codeEditor.isEditMode()" class="form-control" type="text" ng-model="codeEditor.editValue">
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.pi">Principal Investigator</strong>
+        <os-inline-edit editor="piEditor" name="pi" class="value value-md" value="cp.principalInvestigator">
+          <span ng-if="piEditor.isDisplayMode()">{{piEditor.viewValue | osUserDisplayName}}</span>
+          <os-users ng-if="piEditor.isEditMode()" ng-model="piEditor.editValue"></os-users>
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.start_date">Start Date:</strong>
+        <os-inline-edit editor="sdEditor" name="stDate" class="value value-md" value="cp.startDate">
+          <span ng-if="sdEditor.isDisplayMode()">{{sdEditor.viewValue | date: global.dateFmt | osNoValue}}</span>
+          <os-date-picker ng-if="sdEditor.isEditMode()" date="sdEditor.editValue">
+          </os-date-picker>
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.end_date">End Date:</strong>
+        <os-inline-edit editor="edEditor" name="endDate" class="value value-md" value="cp.endDate">
+          <span ng-if="edEditor.isDisplayMode()">{{edEditor.viewValue | date: global.dateFmt | osNoValue}}</span>
+          <os-date-picker ng-if="edEditor.isEditMode()" date="edEditor.editValue">
+          </os-date-picker>
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.desc_url">Description URL:</strong>
+        <os-inline-edit editor="urlEditor" name="descUrl" class="value value-md" value="cp.descriptionUrl">
+          <span ng-if="urlEditor.isDisplayMode()">{{urlEditor.viewValue | osNoValue}}</span>
+          <input ng-if="urlEditor.isEditMode()" type="text" ng-model="urlEditor.editValue" class="form-control" >
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.ethics_approval_id">Ethics Approval ID:</strong>
+        <os-inline-edit editor="irbEditor" name="irbId" class="value value-md" value="cp.irbId">
+          <span ng-if="irbEditor.isDisplayMode()">{{irbEditor.viewValue | osNoValue}}</span>
+          <input ng-if="irbEditor.isEditMode()" type="text" ng-model="irbEditor.editValue" class="form-control" >
+        </os-inline-edit>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.repositories">Repositories</strong>
+        <span class="value value-md">
+          <span ng-repeat="site in cp.cpSites">
+            {{site.siteName}} <span ng-if="codingEnabled && !!site.code">({{site.code}})</span>, 
+          </span>
+        </span>
+      </li>
+
+      <li class="item">
+        <strong class="key key-sm" translate="cp.anticipated_participant_count">Expected Registrations</strong>
+        <span class="value value-md">{{cp.anticipatedParticipantsCount | osNoValue}}</span>
+      </li>
+    </ul>
+
+    <div ng-if="!!cp.extensionDetail">
+      <div os-extension-overview ext-object="cp.extensionDetail" show-column="2"></div>
+    </div>
+
+    <div class="os-section os-line-section">
+      <strong class="key key-sm" translate="cp.label_formats">Label Formats</strong>
+      <div>
+        <ul class="os-key-values os-one-col">
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.ppid">PPID Format</strong>
+            <span class="value value-md">{{cp.ppidFmt | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.visit">Visit</strong>
+            <span class="value value-md">{{cp.visitNameFmt | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.specimen">Specimen</strong>
+            <span class="value value-md">{{cp.specimenLabelFmt | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.aliquot">Aliquot</strong>
+            <span class="value value-md">{{cp.aliquotLabelFmt | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.derivative">Derivative</strong>
+            <span class="value value-md">{{cp.derivativeLabelFmt | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.label_format.manual">User Inputs Allowed for</strong>
+            <span class="value value-md">{{userInputLabels | osNoValue}}</span>
+          </li>
+
+          <li class="item">
+            <strong class="key key-sm" translate="cp.pre_print_spmn_labels">Pre Print Specimen Labels</strong>
+            <span class="value value-md">{{'cp.spmn_label_pre_print_modes.' + cp.spmnLabelPrePrintMode | translate}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="os-section os-line-section">
+      <strong class="key key-sm" translate="cp.print_settings">Print Settings</strong>
+      <div>
+        <span ng-if="cp.spmnLabelPrintSettings.length == 0" translate="common.none">None</span>
+        <table class="os-table os-table-muted-hdr os-border" ng-if="cp.spmnLabelPrintSettings.length > 0">
+          <thead class="os-table-head">
+            <tr class="row">
+              <td class="col os-col-40">
+                <span translate="cp.lineage">Lineage</span>
+              </td>
+              <td class="col os-col-40">
+                <span translate="cp.when_to_print">When to Print</span>
+              </td>
+              <td class="col os-col-20">
+                <span translate="cp.copies">Copies</span>
+              </td>
+            </tr>
+          </thead>
+          <tbody class="os-table-body">
+            <tr class="row" ng-repeat="setting in cp.spmnLabelPrintSettings">
+              <td class="col">
+                <span>{{'cp.spmn_lineages.' + setting.lineage | translate}}</span>
+              </td>
+              <td class="col" ng-switch on="!!setting.printMode">
+                <span ng-switch-when="true">
+                  {{'srs.spmn_label_auto_print_modes.' + setting.printMode | translate}}
+                </span>
+                <span ng-switch-default translate="common.not_specified">
+                  Not Specified
+                </span>
+              </td>
+              <td class="col">
+                <span>{{setting.copies | osNoValue}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+  </div>
+
+  <!-- div class="col-xs-4">
+    <h3 class="os-sub-section-title"> Recent Activity </h3>
+    <ul class="os-activity-list">
+      <li class="os-activity">
+        <div class="title"><a>All recent activity on this CP will go here</a></div>
+        <div class="info"><span>User 1 - an hour ago</span></div>
+      </li>
+    </ul>
+  </div -->
+</div>
+
+

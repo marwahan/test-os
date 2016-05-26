@@ -1,0 +1,83 @@
+<div> 
+  <div os-page-header>
+    <ul os-breadcrumbs>
+      <li> 
+        <a ui-sref="cp-detail.overview({cpId: cpr.cpId})">
+          <span>{{cpr.cpShortTitle}}</span>
+        </a> 
+      </li>
+      <li> 
+        <a ui-sref="participant-list({cpId: cpr.cpId})">
+          <span translate="participant.list">Participants</span>
+        </a> 
+      </li>
+    </ul>
+
+    <h3>
+      <span>{{cpr.ppid}}</span>
+    </h3>
+
+    <div class="os-btns right">
+      <button show-if-allowed="participantResource.updateOpts" class="primary"
+        ui-sref="participant-addedit({cprId: cpr.id, cpId: cpr.cpId})">
+        <span class="fa fa-pencil"></span>
+        <span translate="common.buttons.edit">Edit</span>
+      </button>
+
+      <div os-show-if-menu-items-present dropdown class="inline">
+        <button class="default dropdown-toggle">
+          <span translate="common.buttons.more">More</span>
+          <span class="fa fa-caret-down"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li ng-if="cpsForReg.length > 0">
+            <a ui-sref="participant-newreg">
+              <span class="fa fa-plus"></span>
+              <span translate="participant.reg_another_protocol">
+                Register to Another Protocol
+              </span>
+            </a>
+          </li>
+          <li show-if-allowed="participantResource.deleteOpts">
+            <a ng-click="deleteReg()">
+              <span class="fa fa-trash"></span>
+              <span translate="common.buttons.delete">Delete</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div os-side-menu>
+    <ul>
+      <li ui-sref-active="active"> 
+        <a ui-sref=".overview"> 
+          <i class="fa fa-eye"></i>
+          <span class="os-title" translate="participant.menu.overview">Overview</span>
+        </a>
+      </li>
+      <li ui-sref-active="active" ng-if="!cp.consentsWaived">
+        <a ui-sref=".consents">
+          <i class="fa fa-pencil-square-o"></i>
+          <span class="os-title" translate="participant.menu.consents">Consents</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref=".visits">
+          <i class="fa fa-list-alt"></i>
+          <span class="os-title" translate="participant.menu.visits">Visits</span>
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref=".extensions.list">
+          <i class="fa fa-files-o"></i>
+          <span class="os-title" translate="participant.menu.extensions">Forms</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="os-side-menu-page-content" ui-view></div>
+</div>
+

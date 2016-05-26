@@ -1,0 +1,258 @@
+
+<div>
+  <div os-page-header>
+    <ul os-breadcrumbs>
+      <li><a ui-sref="cp-list" translate="cp.list">Collection Protocols</a></li>
+    </ul>
+
+    <h3>
+      <span ng-if="!cp.id" translate="cp.create_cp_title">Create Collection Protocol</span>
+      <span ng-if="!!cp.id">
+        {{cp.shortTitle}} <span ng-if="codingEnabled && !!cp.code">({{cp.code}})</span>
+      </span>
+    </h3>
+  </div>
+
+  <div class="container">
+    <form name="cpForm" os-form-validator="cpForm" validator="cpFormValidator" class="form-horizontal" novalidate>
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.repositories">Repositories</label>
+        <div class="col-xs-6">
+          <os-select multiple name="repositoryNames" ng-model="cp.repositoryNames" list="sites"
+            class="form-control" placeholder="{{'cp.repositories' | translate}}" 
+            on-select="onRepositorySelect($item)" on-remove="onRepositoryRemove($item)" required>
+          </os-select>
+          <div os-field-error field="cpForm.repositoryNames"></div>
+        </div>
+      </div>
+
+      <div class="os-cp-site-code" ng-if="codingEnabled && showSiteCoding">
+        <div class="form-group clearfix">
+          <div class="col-xs-offset-3">
+            <div class="col-xs-3">
+              <label class="control-label" translate="cp.site">Site</label>
+            </div>
+            <div class="col-xs-3">
+              <label class="control-label" translate="cp.code">Code</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group clearfix os-table-body" ng-repeat="cpSite in cp.cpSites">
+          <div class="col-xs-offset-3">
+            <div class="col-xs-3">
+              <label class="control-label">{{cpSite.siteName}}</label>
+            </div> 
+            <div class="col-xs-3">
+              <input name="code{{$index}}" type="text" ng-model="cpSite.code" class="form-control" 
+                ng-maxlength="16" placeholder="{{'cp.code' | translate}}">
+              <div os-field-error field="cpForm['code' + $index]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="codingEnabled">
+        <div class="col-xs-offset-3 col-xs-6">
+          <a ng-click="$parent.showSiteCoding = !$parent.showSiteCoding">
+            <span ng-if="!showSiteCoding" translate="cp.show_site_coding">More Site Code Information</span>
+            <span ng-if="showSiteCoding" translate="cp.hide_site_coding">Less Site Code Information</span>
+          </a>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.title">Title</label>
+        <div class="col-xs-6">
+          <input type="text" name="title" ng-model="cp.title" 
+            class="form-control" placeholder="{{'cp.title' | translate}}" required>
+          <div os-field-error field="cpForm.title"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.short_title">Short Title</label>
+        <div class="col-xs-6">
+          <input type="text" name="shortTitle" ng-model="cp.shortTitle" 
+            class="form-control" placeholder="{{'cp.short_title' | translate}}" ng-maxlength="50" required>
+          <div os-field-error field="cpForm.shortTitle"></div>
+        </div>
+      </div>
+
+      <div class="form-group" ng-if="codingEnabled">
+        <label class="control-label col-xs-3" translate="cp.code">Short Code</label>
+        <div class="col-xs-6">
+          <input type="text" name="code" ng-model="cp.code" ng-maxlength="16"
+            class="form-control" placeholder="{{'cp.code' | translate}}">
+          <div os-field-error field="cpForm.code"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.pi">Principal Investigator</label>
+        <div class="col-xs-6">
+          <os-users name="pi" ng-model="cp.principalInvestigator" placeholder="{{'cp.pi' | translate}}" required></os-users>
+          <div os-field-error field="cpForm.pi"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.coordinators">Protocol Coordinators</label>
+        <div class="col-xs-6">
+          <os-users multiple ng-model="cp.coordinators" placeholder="{{'cp.coordinators' | translate}}"></os-users>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-xs-3 control-label" translate="cp.date">Date</label>
+        <div class="col-xs-3">
+          <os-date-picker name="startDate" date="cp.startDate"
+            placeholder="{{'cp.start_date' | translate}}">
+          </os-date-picker>
+          <div os-field-error field="cpForm.startDate"></div>
+        </div>
+        <div class="col-xs-3">
+          <os-date-picker name="endDate" date="cp.endDate"
+            placeholder="{{'cp.end_date' | translate}}">
+          </os-date-picker>
+          <div os-field-error field="cpForm.endDate"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.ethics_approval_id">Ethics Approval ID</label>
+        <div class="col-xs-6">
+          <input type="text" ng-model="cp.irbId" class="form-control" placeholder="{{'cp.ethics_approval_id' | translate}}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-xs-3" translate="cp.anticipated_participants_cnt">
+          Anticipated Participants Count
+        </label>
+        <div class="col-xs-6">
+          <input type="text" ng-model="cp.anticipatedParticipantsCount" class="form-control" 
+            placeholder="{{'cp.anticipated_participants_cnt' | translate}}">
+        </div>
+      </div>
+
+      <div ng-if="!mode || mode != 'copy'">
+        <div class="os-divider"></div>
+  
+        <div ng-include="'modules/biospecimen/cp/label-settings.html'"></div>
+
+        <div class="os-entity-extn-form-fields" ng-if="!!extnOpts">
+          <div id='de-form' class='os-extn-form' os-de-form opts="extnOpts" ctrl="deFormCtrl" extended-obj="cp"></div>
+        </div>
+      </div>
+
+      <div class="os-divider"></div>
+
+      <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-6">
+          <button class="btn btn-primary" os-form-submit="createCp()"> 
+            <span ng-if="!cp.id" translate="common.buttons.create"> Create </span>
+            <span ng-if="!!cp.id" translate="common.buttons.update"> Update </span>
+          </button>
+          <button class="btn os-btn-text" ng-click="back()" translate="common.buttons.discard">Discard</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script id="modules/biospecimen/cp/label-settings.html" type="text/ng-template">
+  <div class="form-group">
+    <label class="control-label col-xs-3" translate="cp.ppid_fmt">De-ID Format</label>
+    <div class="col-xs-6">
+      <input type="text" ng-model="cp.ppidFmt" class="form-control" placeholder="{{'cp.ppid_fmt' | translate}}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-xs-3" translate="cp.visit_name_fmt">Visit Name Format</label>
+    <div class="col-xs-6">
+      <input type="text" ng-model="cp.visitNameFmt" class="form-control" placeholder="{{'cp.visit_name_fmt' | translate}}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-xs-3" translate="cp.specimen_label_fmt">Specimen Label Format</label>
+    <div class="col-xs-6">
+      <input type="text" ng-model="cp.specimenLabelFmt" class="form-control" placeholder="{{'cp.specimen_label_fmt' | translate}}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-xs-3" translate="cp.derivative_label_fmt">Derivative Label Format</label>
+    <div class="col-xs-6">
+      <input type="text" ng-model="cp.derivativeLabelFmt" class="form-control" placeholder="{{'cp.derivative_label_fmt' | translate}}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-xs-3" translate="cp.aliquot_label_fmt">Aliquot Label Format</label>
+    <div class="col-xs-6">
+      <input type="text" ng-model="cp.aliquotLabelFmt" class="form-control" placeholder="{{'cp.aliquot_label_fmt' | translate}}">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="control-label col-xs-3">
+      <span translate="cp.manual_enabled_for">Manual Inputs Allowed For</span>
+    </label>
+    <div class="col-xs-9">
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="cp.manualPpidEnabled"> 
+        <span translate="cp.ppids">Participant Protocol IDs</span>
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="cp.manualVisitNameEnabled"> 
+        <span translate="cp.visit_names">Visit Names</span>
+      </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="cp.manualSpecLabelEnabled"> 
+        <span translate="cp.spec_labels">Specimen Labels</span>
+      </label>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="col-xs-3 control-label" translate="cp.pre_print_spmn_labels">Pre Print Specimen Labels</label>
+    <div class="col-xs-6">
+      <label class="radio-inline" ng-repeat="spmnLabelPrePrintMode in spmnLabelPrePrintModes">
+        <input type="radio" name="spmnLblPrePrintMode" ng-model="cp.spmnLabelPrePrintMode"
+          ng-value="spmnLabelPrePrintMode.name" ng-change="onPrePrintModeChange()">
+        <span>{{spmnLabelPrePrintMode.displayName}}</span>
+      </label>
+      <div os-field-warn="'cp.disable_pre_print_warning'" ng-if="prePrintDisabled"></div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="col-xs-3 control-label" translate="cp.print_settings">Print Settings</label>
+    <div class="col-xs-3">
+      <label class="control-label">
+        <span translate="cp.when_to_print">When To Print</span>
+      </label>
+    </div>
+    <div class="col-xs-3">
+      <label class="control-label">
+        <span translate="cp.copies">Copies</span>
+      </label>
+    </div>
+  </div>
+  
+  <div class="form-group clearfix" ng-form="psForm" ng-repeat="setting in cp.spmnLabelPrintSettings">
+    <label class="col-xs-3 control-label">
+      {{'cp.spmn_lineages.' + setting.lineage | translate}}
+    </label>
+    <div class="col-xs-3">
+      <os-select ng-model="setting.printMode" list="spmnLabelAutoPrintModes" display-prop="displayName" select-prop="name">
+      </os-select>
+    </div>
+    <div class="col-xs-3">
+      <input name="copies" ng-model="setting.copies" class="form-control" type="text" ng-pattern="/^[0-9]+$/">
+      <div os-field-error field="psForm.copies"></div>
+    </div>
+  </div>
+</script>

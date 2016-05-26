@@ -1,0 +1,26 @@
+language: java
+node_js: stable
+jdk:
+ - oraclejdk8
+
+before_script:
+  - cd www
+  - npm install -g bower
+  - rm -rf /home/travis/.npm/*
+  - npm install
+  - bower install -f
+  - cd ..
+
+script: gradle build
+
+notifications:
+  email:
+    recipients:
+      - vinayak.pawar@krishagni.com
+    on_success: always
+    on_failure: always
+
+
+branches:
+  only:
+    - master

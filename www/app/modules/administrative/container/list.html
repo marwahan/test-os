@@ -1,0 +1,93 @@
+<div>
+  <div os-page-header>
+    <h3> 
+      <span translate="container.list">Storage Containers</span>
+    </h3>
+    <div class="os-btns right">
+      <button show-if-allowed="containerResource.createOpts" class="primary"
+        title="{{'container.tooltip.add' | translate}}" ui-sref="container-addedit({containerId: ''})">
+        <span class="fa fa-plus"></span>
+        <span translate="common.buttons.create">Create</span>
+      </button>
+      <div dropdown os-show-if-menu-items-present class="inline">
+        <button class="default dropdown-toggle">
+          <span translate="common.buttons.more">More</span>
+          <span class="fa fa-caret-down"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li>
+            <a ui-sref="container-type-list">
+              <span class="fa fa-cubes"></span>
+              <span translate="container_type.list">Container Types</span>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li show-if-allowed="containerResource.createOpts">
+            <a ui-sref="container-import">
+              <i class="fa fa-dropbox"></i>
+              <span translate="container.bulk_import">Import Containers</span>
+            </a>
+          </li>
+          <li show-if-allowed="containerResource.createOpts">
+            <a ui-sref="container-import-jobs">
+              <i class="fa fa-table"></i>
+              <span translate="common.view_import_jobs">View Import Jobs</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <button class="default" os-right-drawer-toggle title="{{'container.tooltip.search' | translate}}">
+        <span class="fa fa-search"></span>
+        <span translate="common.buttons.search">Search</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <table class="os-table os-table-hover">
+      <thead class="os-table-head">
+        <tr class="row">
+          <th class="col">
+            <span translate="container.name">Name</span>
+          </th>
+          <th class="col">
+            <span translate="container.site">Site</span>
+          </th>
+          <th class="col">
+            <span translate="container.created_by">Created By</span>
+          </th>
+          <th class="col">
+            <span translate="container.dimension">Dimension</span>
+          </th>
+          <th class="col">
+            <span translate="container.free_locations">Free Locations</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="os-table-body">
+        <tr class="row" ng-repeat="container in containerList" os-row-click="showContainerOverview(container)">
+          <td class="col">
+            <a ui-sref="container-detail.overview({containerId: container.id})">
+              <span>{{container.name}}</span>
+            </a>
+          </td>
+          <td class="col">
+            <span>{{container.siteName}}</span>
+          </td>
+          <td class="col">
+            <span>{{container.createdBy | osUserDisplayName}}</span>
+          </td>
+          <td class="col">
+            <span>{{container.noOfRows}} X {{container.noOfColumns}}</span>
+          </td>
+          <td class="col">
+            <span>{{container.freePositions | number: 0}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div os-right-drawer ng-include="'modules/administrative/container/search.html'"></div>
+
+</div>

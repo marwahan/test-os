@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+  <class
+    name="com.krishagni.catissueplus.core.administrative.domain.User"
+    table="CATISSUE_USER">
+	
+    <id name="id" column="IDENTIFIER">
+      <generator class="native">
+        <param name="sequence">CATISSUE_USER_SEQ</param>
+      </generator>
+    </id>
+
+    <property name="emailAddress" column="EMAIL_ADDRESS" unique="true"/>
+
+    <property name="phoneNumber" column="PHONE_NUMBER"/>
+
+    <property name="firstName"  column="FIRST_NAME"/>
+
+    <property name="lastName" column="LAST_NAME"/>
+
+    <property name="loginName" column="LOGIN_NAME" not-null="true"/>
+
+    <property name="creationDate" column="START_DATE"/>
+
+    <property name="activityStatus" column="ACTIVITY_STATUS"/>
+
+    <property name="address" column="address"/>
+
+    <many-to-one name="department" column="DEPARTMENT_ID"/>
+
+    <many-to-one name="authDomain" column="DOMAIN_NAME" property-ref="name"/>
+
+    <set name="sites" table="CATISSUE_SITE_USERS" inverse="false" cascade="save-update">
+      <key column="USER_ID" not-null="true"/>
+      <many-to-many class="com.krishagni.catissueplus.core.administrative.domain.Site" column="SITE_ID"/>
+    </set>
+	
+    <property name="password" column="PASSWORD"/>
+	    
+    <set name="passwords" inverse="true" cascade="save-update">
+      <key column="USER_ID"/>
+      <one-to-many  class="com.krishagni.catissueplus.core.administrative.domain.Password" />
+    </set>
+		
+    <property name="comments" column="STATUS_COMMENT"/>
+ 
+    <property name="admin" column="IS_ADMIN"/>
+    
+    <property name="manageForms" column="MANAGE_FORMS"/>
+
+    <filter name="activeEntity"/>
+    
+    <sql-query name="getDependentEntities">
+      <return-scalar column="entityName" type="string"/>
+      <return-scalar column="count" type="int"/>    
+    
+      select 
+        de.entityName as entityName, de.count as count
+      from
+        (
+          select
+            'site' as entityName, count(s.identifier) as count  
+          from 
+            catissue_site s
+            inner join catissue_site_coordinators sc on sc.site_id = s.identifier 
+          where
+            s.activity_status != 'Disabled' and
+            sc.user_id = :userId
+
+          union 
+
+          select 
+            'collection_protocol' as entityName, count(cp.identifier) as count 
+          from 
+            catissue_collection_protocol cp
+            left join catissue_coll_coordinators cc 
+              on cc.collection_protocol_id = cp.identifier and cp.principal_investigator_id != :userId
+          where 
+            cp.activity_status != 'Disabled' and
+            (cp.principal_investigator_id = :userId or cc.user_id = :userId)
+
+          union
+
+          select 
+            'distribution_protocol' as entityName, count(dp.identifier) as count 
+          from
+            catissue_distribution_protocol dp 
+          where
+            dp.activity_status != 'Disabled' and
+            dp.principal_investigator_id = :userId
+        ) de
+      where 
+        de.count > 0
+    </sql-query>
+
+    <sql-query name="getCpCountByUsers">
+      <return-scalar column="userId"  type="long"/>
+      <return-scalar column="cpCount" type="int"/>
+
+      select 
+        u.identifier as userId, count(distinct cp.identifier) as cpCount 
+      from 
+        catissue_collection_protocol cp 
+        left join catissue_coll_coordinators cc on cc.collection_protocol_id = cp.identifier 
+        inner join catissue_user u 
+          on u.identifier = cp.principal_investigator_id or u.identifier = cc.user_id 
+      where 
+        u.identifier in (:userIds) and
+        cp.activity_status != 'Disabled' and
+        u.activity_status != 'Disabled'
+      group by 
+        u.identifier
+    </sql-query>
+  </class>
+</hibernate-mapping>
